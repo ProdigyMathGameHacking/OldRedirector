@@ -1,0 +1,30 @@
+# gitignore
+
+
+
+# Generated Log files
+**/*.log
+*.log
+
+
+# NodeJS/npm modules
+**/node_modules/
+/node_modules/
+
+
+# Extension Private Key files
+**/*.pem
+*.pem
+
+
+# MacOS
+.DS_Store
+**/.DS_Store
+
+
+# IntelliJ IDEA
+**/.idea/
+/.idea/
+
+**/*.iml
+*.iml
