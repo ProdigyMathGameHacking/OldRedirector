@@ -1,0 +1,1 @@
+{"version":3,"file":"constants.js","sourceRoot":"./src/","sources":["constants.ts"],"names":[],"mappings":";;;AAAa,QAAA,UAAU,GAAG,iCAAiC,CAAC","sourcesContent":["export const PNP_DOMAIN = \"https://p-np.prodigypnp.repl.co\";"]}

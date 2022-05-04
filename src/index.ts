@@ -5,6 +5,7 @@ import path from "path";
 import { transpile } from "typescript";
 import cors from "cors";
 import ms from "ms";
+import { PNP_DOMAIN } from "./constants";
 
 const app = express();
 // should match https://github.com/ProdigyPNP/ProdigyMathGameHacking/blob/master/PHEx/src/manifest.json
@@ -21,8 +22,12 @@ setInterval(async () => {
 	try {
 		const status: GameStatus = await (await fetch("https://api.prodigygame.com/game-api/status")).json();
 		console.log(status);
-		const version = status?.data?.gameClientVersion;
+
+        // s-expect-error
+
+	    const version = await (await fetch(PNP_DOMAIN + "/gameVersion")).text();
 		if (lastVersion === "None") return (lastVersion = version!);
+
 
 		// write modified gamefile to disk, in case there's a crash
 	} catch (e) {}
@@ -31,10 +36,9 @@ setInterval(async () => {
 app.use(cors());
 // @ts-expect-error
 app.get("/game.min.js", async (req, res) => {
-    // @ts-expect-error
-	const version = JSON.parse((await (await fetch("https://math.prodigygame.com/play?launcher=true")).text())
-	.match(/(?<=gameStatusDataStr = ').+(?=')/)[0])
-	const status = await (await fetch('https://api.prodigygame.com/game-api/status')).json()
+
+	const version = await (await fetch(PNP_DOMAIN + "/gameVersion")).text();
+	const status = await (await fetch('https://api.prodigygame.com/game-api/status')).json();
 	if (status.status !== "success" || !version) return res.sendStatus(503);
 	const gameMinJS = await (
 		await fetch(`https://code.prodigygame.com/code/${version}/game.min.js?v=${version}`)
@@ -79,7 +83,7 @@ app.get("/game.min.js", async (req, res) => {
 app.get("/", (req, res) => res.redirect("/game.min.js"));
 
 app.get("/public-game.min.js", async (req, res) => {
-	if (!req.query.hash) return res.send("alert('OUTDATED REDIRECTOR CONFIG')")
+	if (!req.query.hash) return res.type("js").send("alert('OUTDATED REDIRECTOR CONFIG');")
 	const publicGame = await (await fetch(`https://code.prodigygame.com/js/public-game-${req.query.hash}.min.js`)).text();
 	res.type(".js");
 	return res.send(`

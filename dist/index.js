@@ -10,6 +10,7 @@ const path_1 = __importDefault(require("path"));
 const typescript_1 = require("typescript");
 const cors_1 = __importDefault(require("cors"));
 const ms_1 = __importDefault(require("ms"));
+const constants_1 = require("./constants");
 const app = express_1.default();
 const SupportPHEXVersion = "2.1.9";
 let lastVersion = "None";
@@ -18,7 +19,7 @@ setInterval(async () => {
     try {
         const status = await (await node_fetch_1.default("https://api.prodigygame.com/game-api/status")).json();
         console.log(status);
-        const version = status?.data?.gameClientVersion;
+        const version = await (await node_fetch_1.default(constants_1.PNP_DOMAIN + "/gameVersion")).text();
         if (lastVersion === "None")
             return (lastVersion = version);
     }
@@ -26,8 +27,7 @@ setInterval(async () => {
 }, 10 * 60 * 1000);
 app.use(cors_1.default());
 app.get("/game.min.js", async (req, res) => {
-    const version = JSON.parse((await (await node_fetch_1.default("https://math.prodigygame.com/play?launcher=true")).text())
-        .match(/(?<=gameStatusDataStr = ').+(?=')/)[0]);
+    const version = await (await node_fetch_1.default(constants_1.PNP_DOMAIN + "/gameVersion")).text();
     const status = await (await node_fetch_1.default('https://api.prodigygame.com/game-api/status')).json();
     if (status.status !== "success" || !version)
         return res.sendStatus(503);
@@ -64,7 +64,7 @@ app.get("/game.min.js", async (req, res) => {
 app.get("/", (req, res) => res.redirect("/game.min.js"));
 app.get("/public-game.min.js", async (req, res) => {
     if (!req.query.hash)
-        return res.send("alert('OUTDATED REDIRECTOR CONFIG')");
+        return res.type("js").send("alert('OUTDATED REDIRECTOR CONFIG');");
     const publicGame = await (await node_fetch_1.default(`https://code.prodigygame.com/js/public-game-${req.query.hash}.min.js`)).text();
     res.type(".js");
     return res.send(`

@@ -2,18 +2,24 @@
 
 try {
 
-
     const fetch = require("node-fetch");
 
 
-    // TODO: GET THE PRODIGY VERSION AUTOMATICALLY
-    const version = "6.50.0";
+
+    const pnpDomain = "https://p-np.prodigypnp.repl.co";
+    const gameVersionURL = pnpDomain + "/gameVersion";
+
+
 
 
 
 
 
     (async () => {
+
+        const version = await (await fetch(gameVersionURL)).text();
+
+
         const status = await (await fetch("https://api.prodigygame.com/game-api/status")).json();
 
 
