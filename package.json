@@ -16,6 +16,8 @@
 
 		"start": "node dist",
 
+		"test": "node test/test.js",
+
 		"build": "npx tsc",
 		"compile": "npx tsc",
 		"tsc": "npx tsc",
