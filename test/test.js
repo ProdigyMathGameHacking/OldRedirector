@@ -6,36 +6,8 @@ try {
     const fetch = require("node-fetch");
 
 
-
-
-
-
-
-
-    let lastGameStatus = null;
-    const getGameStatus = async () => {
-        if (lastGameStatus)
-            return lastGameStatus;
-        try {
-            const json = (await (await (0, fetch.default)("https://math.prodigygame.com/play?launcher=true")).text()).match(/(?<=gameStatusDataStr = ').+(?=')/);
-            if (!json?.length)
-                return null;
-            return JSON.parse(json[0]);
-        }
-        catch (e) {
-            console.warn(`An error occurred while obtaining the game status.\n${e}`);
-            return null;
-        }
-    };
-
-    const gs = getGameStatus();
-
-	const version = gs.gameClientVersion;
-
-
-
-
-
+    // TODO: GET THE PRODIGY VERSION AUTOMATICALLY
+    const version = "6.50.0";
 
 
 
@@ -54,10 +26,10 @@ try {
     })();
 
 
-} catch (e) {
+} catch (error) {
 
 
-    console.error(e);
+    console.error(error);
     console.error("Test failed.");
 
 }
