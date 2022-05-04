@@ -26,7 +26,7 @@ setInterval(async () => {
 }, 10 * 60 * 1000);
 app.use(cors_1.default());
 app.get("/game.min.js", async (req, res) => {
-    const version = JSON.parse((await (await node_fetch_1.default('https://play.prodigygame.com/play')).text())
+    const version = JSON.parse((await (await node_fetch_1.default("https://math.prodigygame.com/play?launcher=true")).text())
         .match(/(?<=gameStatusDataStr = ').+(?=')/)[0]);
     const status = await (await node_fetch_1.default('https://api.prodigygame.com/game-api/status')).json();
     if (status.status !== "success" || !version)
@@ -50,7 +50,7 @@ app.get("/game.min.js", async (req, res) => {
 	
 			${gameMinJS}
 
-			${typescript_1.transpile(fs_1.default.readFileSync(path_1.default.join(__dirname, "./revival.ts"), { encoding: "utf8" }))}
+			${typescript_1.transpile(fs_1.default.readFileSync(path_1.default.join(__dirname, "./revival.js"), { encoding: "utf8" }))}
 
 			console.log("%cWill's Redirect Hack", "font-size:40px;color:#540052;font-weight:900;font-family:sans-serif;");
 			console.log("%cVersion ${SupportPHEXVersion}", "font-size:20px;color:#000025;font-weight:700;font-family:sans-serif;");
